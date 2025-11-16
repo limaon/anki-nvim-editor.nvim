@@ -1,0 +1,24 @@
+# Neovim
+*.swp
+*.swo
+*~
+.*.sw?
+
+# Lua
+*.luac
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+
+# Logs
+*.log
+
+# Temporary files
+*.tmp
+*.temp
+
