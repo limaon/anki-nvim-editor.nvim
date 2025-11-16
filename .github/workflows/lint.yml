@@ -15,6 +15,7 @@ jobs:
         if: runner.os == 'Linux'
         run: |
           sudo apt-get update
+          # Install Lua and luarocks. Use lua5.3 or adjust to lua5.4 if desired.
           sudo apt-get install -y lua5.3 liblua5.3-dev luarocks
       - name: Install luacheck
         run: |
