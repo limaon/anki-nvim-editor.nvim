@@ -1,13 +1,12 @@
-# 📊 Status do Projeto - anki-nvim-editor
+# 📊 Status do Projeto - anki-editor.nvim
 
-Última atualização: 2025-01-16
 
 ## ✅ Concluído
 
 ### Estrutura Base
 - [x] Estrutura de diretórios do plugin Lua
-- [x] Arquivo de entrada principal (`plugin/anki-nvim-editor.vim`)
-- [x] Setup do plugin em `lua/anki-nvim-editor/init.lua`
+- [x] Arquivo de entrada principal (`plugin/anki-editor.vim`)
+- [x] Setup do plugin em `lua/anki-editor/init.lua`
 - [x] Sistema de configuração (`config.lua`)
 - [x] Geração automática de versão do projeto
 
@@ -163,7 +162,6 @@ Veja [CONTRIBUTING.md](./CONTRIBUTING.md) para detalhes.
 
 ---
 
-**Projeto iniciado em:** 16 de Janeiro de 2025
+**Projeto iniciado em:** 15/11/2025
 **Status atual:** MVP em desenvolvimento
 **Próxima revisão:** Após testes manual do MVP
-

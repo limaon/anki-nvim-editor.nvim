@@ -1,9 +1,9 @@
-# anki-nvim-editor Project Structure
+# anki-editor.nvim Project Structure
 
 ## File Tree
 
 ```
-anki-nvim-editor/
+anki-editor.nvim/
 │
 ├── README.md                      # Main documentation
 ├── PLANO.md                       # Roadmap and detailed architecture (Portuguese)
@@ -27,7 +27,7 @@ anki-nvim-editor/
 │       └── release.yml            # CD: Create releases automatically
 │
 ├── Plugin (Lua)
-│   └── lua/anki-nvim-editor/
+│   └── lua/anki-editor/
 │       ├── init.lua               # Entry point and setup
 │       ├── config.lua             # Configuration management
 │       ├── anki_connect.lua       # HTTP client for Anki-Connect
@@ -38,7 +38,7 @@ anki-nvim-editor/
 │
 ├── Plugin (Vimscript)
 │   └── plugin/
-│       └── anki-nvim-editor.vim   # Entry point (autoload)
+│       └── anki-editor.vim        # Entry point (autoload)
 │
 └── Examples
     └── examples/
@@ -49,7 +49,7 @@ anki-nvim-editor/
 
 ## Component Descriptions
 
-### Core Plugin (`lua/anki-nvim-editor/`)
+### Core Plugin (`lua/anki-editor/`)
 
 | File | Responsibility |
 |------|----------------|
@@ -186,7 +186,7 @@ anki-nvim-editor/
 1. Read [development.md](./development.md)
 2. Clone the repository
 3. Set up the local environment
-4. Make changes in `lua/anki-nvim-editor/`
+4. Make changes in `lua/anki-editor/`
 5. Test with `:AnkiPing` and `:AnkiEdit`
 6. Submit a PR
 

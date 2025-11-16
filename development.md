@@ -1,6 +1,6 @@
 # Development Guide
 
-This guide explains how to develop and test the anki-nvim-editor plugin.
+This guide explains how to develop and test the anki-editor.nvim plugin.
 
 ## Prerequisites
 
@@ -13,8 +13,8 @@ This guide explains how to develop and test the anki-nvim-editor plugin.
 ## Project Structure
 
 ```
-anki-nvim-editor/
-├── lua/anki-nvim-editor/          # Main plugin source
+anki-editor.nvim/
+├── lua/anki-editor/               # Main plugin source
 │   ├── init.lua                   # Entry point and setup
 │   ├── config.lua                 # Configuration management
 │   ├── anki_connect.lua           # Anki-Connect client
@@ -23,7 +23,7 @@ anki-nvim-editor/
 │   ├── ui.lua                     # UI selection interface
 │   └── utils.lua                  # Utility functions
 ├── plugin/
-│   └── anki-nvim-editor.vim       # Plugin entry (Vimscript)
+│   └── anki-editor.vim            # Plugin entry (Vimscript)
 ├── .github/workflows/
 │   ├── lint.yml                   # Linting CI
 │   ├── test.yml                   # Testing CI
@@ -37,19 +37,19 @@ anki-nvim-editor/
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/limaon/anki-nvim-editor.nvim.git
-cd anki-nvim-editor.nvim
+git clone https://github.com/limaon/anki-editor.nvim.git
+cd anki-editor.nvim
 ```
 
 2. Create a test config for Neovim:
 ```bash
 mkdir -p ~/.config/nvim-test
 cat > ~/.config/nvim-test/init.vim << 'EOF'
-" Test configuration for anki-nvim-editor
-set runtimepath+=/path/to/anki-nvim-editor
+" Test configuration for anki-editor.nvim
+set runtimepath+=/path/to/anki-editor.nvim
 set runtimepath+=/path/to/plenary.nvim  " optional
 
-lua require('anki-nvim-editor.nvim').setup({
+lua require('anki-editor').setup({
   anki_connect_url = "http://127.0.0.1:8765",
   timeout_ms = 5000,
 })
@@ -87,7 +87,7 @@ stylua --check lua/ plugin/
 luacheck lua/ --globals vim
 
 # Lint specific file
-luacheck lua/anki-nvim-editor/init.lua --globals vim
+luacheck lua/anki-editor/init.lua --globals vim
 ```
 
 ### Configuration Files
@@ -134,7 +134,7 @@ vim.loglevel = vim.log.levels.DEBUG
 
 ```lua
 -- In your code
-local plugin = require('anki-nvim-editor')
+local plugin = require('anki-editor')
 print(vim.inspect(plugin.get_state()))
 ```
 
@@ -189,21 +189,21 @@ When adding a new feature:
 
 ### Adding a new command
 
-1. Add function to `lua/anki-nvim-editor/commands.lua`
-2. Register in `lua/anki-nvim-editor/init.lua` using `vim.api.nvim_create_user_command`
+1. Add function to `lua/anki-editor/commands.lua`
+2. Register in `lua/anki-editor/init.lua` using `vim.api.nvim_create_user_command`
 3. Add tests to manual checklist
 4. Document in README.md
 
 ### Adding Anki-Connect API calls
 
-1. Add function to `lua/anki-nvim-editor/anki_connect.lua`
+1. Add function to `lua/anki-editor/anki_connect.lua`
 2. Use the `request` function with proper payload structure
 3. Test with `curl` first to validate payload format
 4. Document the Anki-Connect action version used
 
 ### Modifying buffer behavior
 
-1. Update `lua/anki-nvim-editor/buffers.lua`
+1. Update `lua/anki-editor/buffers.lua`
 2. Test with multiple buffers open
 3. Test save/modification detection
 4. Test error cases (invalid templates, connection loss)
