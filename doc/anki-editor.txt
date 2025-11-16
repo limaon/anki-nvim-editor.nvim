@@ -1,0 +1,175 @@
+*anki-editor.txt*                               anki-editor.nvim  -  Neovim plugin
+
+==============================================================================
+CONTENTS                                                      *anki-editor*
+
+  1. Overview ........................................ |anki-editor-overview|
+  2. Requirements .................................... |anki-editor-reqs|
+  3. Installation .................................... |anki-editor-install|
+  4. Setup / Config .................................. |anki-editor-setup|
+  5. Commands ........................................ |anki-editor-commands|
+  6. Keymaps (suggested) ............................. |anki-editor-keymaps|
+  7. Usage / Flow .................................... |anki-editor-usage|
+  8. Troubleshooting ................................. |anki-editor-troubleshooting|
+  9. FAQ ............................................. |anki-editor-faq|
+ 10. License ......................................... |anki-editor-license|
+
+==============================================================================
+1. OVERVIEW                                         *anki-editor-overview*
+
+`anki-editor.nvim` lets you edit Anki card templates and CSS directly from
+Neovim, pushing changes to the Anki Desktop app through the Anki‑Connect
+add‑on (HTTP JSON‑RPC).
+
+Features:
+  • Open card templates (Front/Back) and Styling as editable buffers
+  • Save (|:write|) to update Anki via Anki‑Connect
+  • Simple template validation (warns on unbalanced {{ }})
+  • Uses |vim.ui.select()| (works with built‑in UI, telescope‑ui‑select, etc.)
+
+==============================================================================
+2. REQUIREMENTS                                           *anki-editor-reqs*
+
+  • Neovim 0.6+ (0.10+ recommended)
+  • Anki Desktop running
+  • Anki‑Connect add‑on installed and enabled
+  • (Optional) telescope.nvim / telescope‑ui‑select for a richer picker
+  • (Optional) nvim‑notify for nicer notifications
+
+==============================================================================
+3. INSTALLATION                                       *anki-editor-install*
+
+Using *lazy.nvim*:
+>
+  { 'limaon/anki-editor.nvim',
+    event = 'VeryLazy',
+    config = function()
+      require('anki-editor').setup({
+        anki_connect_url = 'http://127.0.0.1:8765',
+      })
+    end,
+  }
+<
+
+Using *vim-plug*:
+>
+  Plug 'limaon/anki-editor.nvim'
+  lua << EOF
+    require('anki-editor').setup()
+  EOF
+<
+
+Generate helptags once (many plugin managers do this automatically):
+>
+  :helptags ALL
+<
+Then:
+>
+  :h anki-editor
+<
+
+==============================================================================
+4. SETUP / CONFIG                                      *anki-editor-setup*
+
+>lua
+require('anki-editor').setup({
+  anki_connect_url = 'http://127.0.0.1:8765',  -- Anki-Connect endpoint
+  api_key = nil,                               -- set if you use Anki-Connect API key
+  buffer_readonly = false,                     -- buffers are writable with :write
+  buffer_prefix = '[Anki]',                    -- buffer name prefix for virtual docs
+  timeout_ms = 5000,                           -- curl timeout
+  check_on_write = true,                       -- warn on simple template mistakes
+  notify_provider = 'copy_of_vim.notify',      -- or 'nvim-notify'
+})
+<
+
+Note: Buffers are created as *acwrite* and do not write to disk; |:write|
+triggers a push to Anki‑Connect and then clears |modified|.
+
+==============================================================================
+5. COMMANDS                                         *anki-editor-commands*
+
+                                                    *:AnkiEdit*
+:AnkiEdit
+    Opens interactive selectors (model → card → side) and then opens 3
+    buffers: Front, Back, and Styling.
+
+                                                    *:AnkiList*
+:AnkiList
+    Lists available models.
+
+                                                    *:AnkiRefresh*
+:AnkiRefresh
+    Clears the in‑memory model cache.
+
+                                                    *:AnkiPing*
+:AnkiPing
+    Verifies connectivity to Anki‑Connect (shows version).
+
+==============================================================================
+6. KEYMAPS (SUGGESTED)                            *anki-editor-keymaps*
+
+>lua
+local map = vim.keymap.set
+local opts = { noremap = true, silent = true }
+map('n', '<leader>ne', ':AnkiEdit<CR>', opts)
+map('n', '<leader>nl', ':AnkiList<CR>', opts)
+map('n', '<leader>np', ':AnkiPing<CR>', opts)
+<
+
+==============================================================================
+7. USAGE / FLOW                                      *anki-editor-usage*
+
+1. `:AnkiEdit`
+2. Choose a note type (model), then a card (e.g. “Card 1”), then a side
+   (Front / Back / Styling).
+3. Three buffers open:
+     • `[Anki] <Model> - <Card> - Front`
+     • `[Anki] <Model> - <Card> - Back`
+     • `[Anki] <Model> - <Card> - Styling`
+4. Edit and `:write` in any of them to push to Anki via Anki‑Connect.
+5. If you use “Anki Preview Reloader” add‑on, Anki’s preview reloads live.
+
+Notes:
+  • Our write handler only triggers for buffers whose name begins with the
+    configured `buffer_prefix`. Normal files are not intercepted.
+  • Simple validation warns on unbalanced `{{ }}` (front/back) or `{}` (CSS)
+    but does not block saving; Anki‑Connect will validate definitively.
+
+==============================================================================
+8. TROUBLESHOOTING                             *anki-editor-troubleshooting*
+
+• “Connection failed …” / “Empty response …”
+    – Ensure Anki Desktop is running and Anki‑Connect is enabled.
+    – Check `anki_connect_url` (default `http://127.0.0.1:8765`).
+    – If you set an API key in Anki‑Connect config, also set `api_key`.
+
+• E5560 fast event errors (win_gettype / nvim_* must not be called …)
+    – The plugin schedules UI and buffer ops; if you see this elsewhere,
+      ensure you don’t call UI from a |vim.loop|/job callback without
+      `vim.schedule()`.
+
+• `:w` doesn’t save normal files
+    – Fixed by scoping our |BufWriteCmd| to the plugin buffer prefix. Make
+      sure you use the default `buffer_prefix` or adjust it consistently.
+
+==============================================================================
+9. FAQ                                                    *anki-editor-faq*
+
+Q: Do I need telescope?
+  A: No; the plugin uses |vim.ui.select()|. With telescope‑ui‑select you get a
+     nicer picker, but it’s optional.
+
+Q: Can I change the buffer names or prefix?
+  A: Yes, set `buffer_prefix` in |anki-editor-setup|.
+
+Q: How do I generate help tags?
+  A: `:helptags ALL` or `:helptags {path-to-plugin}/doc`.
+
+==============================================================================
+10. LICENSE                                         *anki-editor-license*
+
+MIT License. See |:help license| and the repository’s LICENSE file.
+
+==============================================================================
+vim:tw=78:ts=8:ft=help:norl:
