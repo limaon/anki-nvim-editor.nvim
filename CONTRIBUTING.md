@@ -1,11 +1,11 @@
-# Contributing to anki-nvim-editor
+# Contributing to anki-editor.nvim
 
 Thank you for your interest in contributing! This document provides guidelines for contributing to the project.
 
 ## Getting Started
 
 1. Fork the repository
-2. Clone your fork: `git clone https://github.com/YOUR_USERNAME/anki-nvim-editor.git`
+2. Clone your fork: `git clone https://github.com/YOUR_USERNAME/anki-editor.nvim.git`
 3. Create a feature branch: `git checkout -b feature/your-feature`
 4. Make your changes
 5. Test your changes locally
@@ -66,7 +66,7 @@ Before submitting a PR, test with:
 ```bash
 # Manual testing
 nvim --noplugin -u init.vim
-:set runtimepath+=/path/to/anki-nvim-editor
+:set runtimepath+=/path/to/anki-editor.nvim
 
 # Run the :AnkiPing command to verify Anki-Connect connection
 :AnkiPing
