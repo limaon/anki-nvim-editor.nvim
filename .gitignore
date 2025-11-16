@@ -2,23 +2,45 @@
 *.swp
 *.swo
 *~
-.*.sw?
+.netrwhist
+session.vim
 
 # Lua
 *.luac
+luac.out
 
-# OS
-.DS_Store
-Thumbs.db
+# Dependencies
+/node_modules
+/vendor
+/.venv
+/venv
 
-# Editor
+# IDE
 .vscode/
 .idea/
+*.iml
+.DS_Store
+*.sublime-*
+tags
+
+# Build/Release
+dist/
+build/
+*.zip
+*.tar.gz
 
 # Logs
 *.log
+npm-debug.log*
 
-# Temporary files
-*.tmp
-*.temp
+# OS
+Thumbs.db
+.DS_Store
 
+# Testing
+.coverage
+coverage/
+
+# Local env
+.env
+.env.local

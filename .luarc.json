@@ -1,0 +1,30 @@
+{
+  "runtime": {
+    "version": "Lua 5.1",
+    "path": [
+      "?.lua",
+      "?/init.lua",
+      "${3rd}/luassert/library",
+      "${3rd}/busted/library"
+    ]
+  },
+  "diagnostics": {
+    "globals": ["vim"],
+    "disable": ["lowercase-global"]
+  },
+  "workspace": {
+    "library": [
+      "${3rd}/busted/library",
+      "${3rd}/luassert/library"
+    ],
+    "ignoreDir": [
+      ".git",
+      ".github",
+      "node_modules"
+    ]
+  },
+  "telemetry": {
+    "enable": false
+  }
+}
+
