@@ -68,15 +68,19 @@ end
 ---@param level string Notification level: "info", "warn", "error"
 function M.notify(message, level)
   level = level or "info"
-  if state.config.notify_provider == "nvim-notify" then
-    local ok, notify = pcall(require, "notify")
-    if ok then
-      notify(message, level)
-      return
+  -- Always schedule notifications to avoid fast event context errors (E5560)
+  vim.schedule(function()
+    if state.config.notify_provider == "nvim-notify" then
+      local ok, notify = pcall(require, "notify")
+      if ok then
+        notify(message, level)
+        return
+      end
     end
-  end
-  -- Fallback to vim.notify
-  vim.notify(message, vim.log.levels[string.upper(level)] or vim.log.levels.INFO)
+    -- Fallback to vim.notify with numeric level
+    local lvl = vim.log.levels[string.upper(level)] or vim.log.levels.INFO
+    vim.notify(message, lvl)
+  end)
 end
 
 ---Get current state (for debugging)
