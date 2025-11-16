@@ -4,10 +4,10 @@
 
 -- init.vim:
 -- call plug#begin('~/.local/share/nvim/plugged')
--- Plug 'your-github-username/anki-nvim-editor'
+-- Plug 'limaon/anki-editor.nvim'
 -- call plug#end()
 --
--- lua require('anki-nvim-editor').setup()
+-- lua require('anki-editor').setup()
 
 -- Or in init.lua:
 local Plug = vim.fn['plug#']

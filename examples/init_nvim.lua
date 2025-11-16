@@ -1,8 +1,8 @@
--- Example Neovim configuration for anki-nvim-editor plugin
+-- Example Neovim configuration for anki-editor.nvim plugin
 -- Copy this to your Neovim config and adjust as needed
 
 -- Make sure plugin is in your runtimepath
--- vim.opt.runtimepath:prepend('/path/to/anki-nvim-editor')
+-- vim.opt.runtimepath:prepend('/path/to/anki-editor.nvim')
 
 -- Basic setup with defaults
 require('anki-editor').setup()
@@ -45,4 +45,3 @@ local opts = { noremap = true, silent = true }
 vim.keymap.set('n', '<leader>ne', ':AnkiEdit<CR>', opts)
 vim.keymap.set('n', '<leader>nl', ':AnkiList<CR>', opts)
 vim.keymap.set('n', '<leader>np', ':AnkiPing<CR>', opts)
-

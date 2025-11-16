@@ -60,7 +60,7 @@ function M.setup(user_config)
     commands.ping(state)
   end, { desc = "Test Anki-Connect connection" })
 
-  M.notify("anki-editor initialized", "info")
+  -- M.notify("anki-editor initialized", "info")
 end
 
 ---Notify user with message
@@ -90,6 +90,3 @@ function M.get_state()
 end
 
 return M
-
-
-
