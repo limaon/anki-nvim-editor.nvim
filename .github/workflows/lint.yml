@@ -11,20 +11,25 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
-      - name: Install luacheck
+      - name: Install Lua and LuaRocks
         run: |
           sudo apt-get update
-          sudo apt-get install -y luacheck
-
+          # Install Lua and luarocks. Use lua5.3 or adjust to lua5.4 if desired.
+          sudo apt-get install -y lua5.3 luarocks
+      - name: Install luacheck
+        run: |
+          # Install luacheck via LuaRocks (system-wide)
+          sudo luarocks install luacheck
       - name: Run luacheck
-        run: luacheck lua/ --globals vim
+        run: |
+          # ensure luarocks bin is in PATH if luarocks puts executables into /usr/local/bin
+          echo "::add-path::/usr/local/bin" || true
+          luacheck lua/ --globals vim
 
   stylua:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
       - name: Install stylua
         run: |
           mkdir -p ~/.local/bin
@@ -32,7 +37,6 @@ jobs:
           unzip /tmp/stylua.zip -d ~/.local/bin
           chmod +x ~/.local/bin/stylua
           echo "$HOME/.local/bin" >> $GITHUB_PATH
-
       - name: Run stylua check
         run: stylua --check lua/ plugin/
 
