@@ -10,9 +10,16 @@ function M.setup_autocmds(state)
   local group = vim.api.nvim_create_augroup("AnkiEditorGroup", { clear = true })
 
   -- Intercept writes for Anki buffers so we don't try to write files to disk
+  -- Scope ONLY to our virtual Anki buffers by name prefix to avoid hijacking normal writes
+  local function escape_filepattern(text)
+    return (text or ""):gsub("([\\%[%]%*%?])", "\\%1")
+  end
+  local prefix = escape_filepattern(state.config.buffer_prefix or "[Anki]")
+  local pattern = prefix .. "*"
+
   vim.api.nvim_create_autocmd("BufWriteCmd", {
     group = group,
-    pattern = "*",
+    pattern = pattern,
     callback = function(args)
       local bufnr = args.buf
       if state.active_templates[bufnr] then
