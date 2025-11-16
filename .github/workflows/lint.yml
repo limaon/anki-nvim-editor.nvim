@@ -1,42 +1,29 @@
-name: Lint
+name: Linting and style checking
 
-on:
-  push:
-    branches: [main, develop]
-  pull_request:
-    branches: [main, develop]
+on: [pull_request]
 
 jobs:
   luacheck:
-    runs-on: ubuntu-latest
+    name: Luacheck
+    runs-on: ubuntu-20.04
     steps:
-      - uses: actions/checkout@v4
-      - name: Install Lua and LuaRocks
+      - uses: actions/checkout@v3
+
+      - name: Prepare
         run: |
           sudo apt-get update
-          # Install Lua and luarocks. Use lua5.3 or adjust to lua5.4 if desired.
-          sudo apt-get install -y lua5.3 liblua5.3-dev luarocks
-      - name: Install luacheck
-        run: |
-          # Install luacheck via LuaRocks (system-wide)
+          sudo apt-get install -y luarocks
           sudo luarocks install luacheck
-      - name: Run luacheck
-        run: |
-          # ensure luarocks bin is in PATH if luarocks puts executables into /usr/local/bin
-          echo "::add-path::/usr/local/bin" || true
-          luacheck lua/ --globals vim
+      - name: Lint
+        run: luacheck .
 
   stylua:
-    runs-on: ubuntu-latest
+    name: Stylua
+    runs-on: ubuntu-20.04
     steps:
-      - uses: actions/checkout@v4
-      - name: Install stylua
-        run: |
-          mkdir -p ~/.local/bin
-          curl -L https://github.com/JohnnyMorganz/StyLua/releases/download/v0.20.0/stylua-0.20.0-linux.zip -o /tmp/stylua.zip
-          unzip /tmp/stylua.zip -d ~/.local/bin
-          chmod +x ~/.local/bin/stylua
-          echo "$HOME/.local/bin" >> $GITHUB_PATH
-      - name: Run stylua check
-        run: stylua --check lua/ plugin/
-
+      - uses: actions/checkout@v3
+      - uses: JohnnyMorganz/stylua-action@v2
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          version: latest
+          args: --color always --check .

@@ -4,12 +4,6 @@ Neovim plugin to edit Anki card templates directly in the editor, with automatic
 
 This project adapts the VSCode extension [anki-editor](https://github.com/Pedro-Bronsveld/anki-editor) to Neovim, implemented in Lua instead of TypeScript.
 
-## Status
-
-MVP in development — base structure created, main features being implemented.
-
-See [PLANO.md](./PLANO.md) for the detailed roadmap and architecture notes.
-
 ## Requirements
 
 ### Required
