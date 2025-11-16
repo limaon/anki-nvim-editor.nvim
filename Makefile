@@ -7,7 +7,7 @@ GREEN := \033[32m
 BLUE := \033[34m
 
 help:
-	@echo "$(BOLD)anki-nvim-editor - Development Tasks$(RESET)"
+	@echo "$(BOLD)anki-editor.nvim - Development Tasks$(RESET)"
 	@echo ""
 	@echo "$(BLUE)Available targets:$(RESET)"
 	@echo "  $(GREEN)format$(RESET)          - Format code with StyLua"
@@ -66,7 +66,7 @@ nvim:
 	@echo "$(BLUE)Note: Make sure Anki and Anki-Connect are running$(RESET)"
 	nvim -u NONE -i NONE \
 		-c "set runtimepath+=$(PWD)" \
-		-c "lua require('anki-nvim-editor').setup()"
+		-c "lua require('anki-editor').setup()"
 
 nvim-test:
 	@echo "$(BOLD)Launching Neovim with test configuration...$(RESET)"
@@ -74,7 +74,7 @@ nvim-test:
 	@mkdir -p ~/.config/nvim-test
 	@cat > ~/.config/nvim-test/init.lua << 'EOF'
 set runtimepath+=$(PWD)
-lua require('anki-nvim-editor').setup({
+lua require('anki-editor').setup({
   anki_connect_url = "http://127.0.0.1:8765",
   timeout_ms = 5000,
 })

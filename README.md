@@ -1,4 +1,4 @@
-# anki-nvim-editor
+# anki-editor.nvim
 
 Neovim plugin to edit Anki card templates directly in the editor, with automatic synchronization via Anki-Connect.
 
