@@ -42,12 +42,12 @@ function M.handle_buffer_save(state, bufnr)
     return
   end
 
-  -- Validate before sending (basic check)
+  -- Validate before sending (basic check). Warn only; let Anki-Connect be the final validator.
   if state.config.check_on_write then
     local valid, msg = M.validate_template(content, template.side)
     if not valid then
-      require("anki-editor").notify("Validation failed: " .. msg, "warn")
-      return
+      require("anki-editor").notify("Validation warning: " .. (msg or "potential template issue"), "warn")
+      -- continue anyway
     end
   end
 
@@ -107,17 +107,17 @@ end
 ---@return boolean, string valid, error message
 function M.validate_template(content, side)
   if side == "Styling" then
-    -- Basic CSS validation
-    local open_braces = string.len(content) - string.len(string.gsub(content, "{", ""))
-    local close_braces = string.len(content) - string.len(string.gsub(content, "}", ""))
-    if open_braces ~= close_braces then
+    -- Basic CSS validation: count literal '{' and '}' (escape patterns)
+    local opens = select(2, string.gsub(content or "", "%%{", ""))
+    local closes = select(2, string.gsub(content or "", "%%}", ""))
+    if opens ~= closes then
       return false, "Unbalanced braces in CSS"
     end
   else
-    -- Basic template validation
-    local open_brackets = string.len(content) - string.len(string.gsub(content, "{{", ""))
-    local close_brackets = string.len(content) - string.len(string.gsub(content, "}}", ""))
-    if open_brackets ~= close_brackets then
+    -- Basic template validation: count double-curly pairs literally
+    local opens = select(2, string.gsub(content or "", "%%{%{", ""))
+    local closes = select(2, string.gsub(content or "", "%%}%}", ""))
+    if opens ~= closes then
       return false, "Unbalanced template brackets"
     end
   end
