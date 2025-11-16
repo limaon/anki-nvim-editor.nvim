@@ -1,0 +1,54 @@
+name: Create Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  create-release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get version from tag
+        id: tag_name
+        run: |
+          echo "tag=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+
+      - name: Extract changelog for this version
+        id: changelog
+        run: |
+          TAG=${{ steps.tag_name.outputs.tag }}
+          # Extract section from CHANGELOG.md for this tag
+          # This is a simple approach; adjust based on your CHANGELOG format
+          echo "changelog=$(sed -n "/## \[${TAG}\]/,/## \[/p" CHANGELOG.md | head -n -1)" >> $GITHUB_OUTPUT
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ steps.tag_name.outputs.tag }}
+          body: ${{ steps.changelog.outputs.changelog }}
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create release asset (zip)
+        run: |
+          mkdir -p anki-nvim-editor
+          cp -r lua/ plugin/ README.md LICENSE CHANGELOG.md anki-nvim-editor/ 2>/dev/null || true
+          zip -r anki-nvim-editor-${{ steps.tag_name.outputs.tag }}.zip anki-nvim-editor/
+
+      - name: Upload release asset
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ steps.tag_name.outputs.tag }}
+          files: anki-nvim-editor-${{ steps.tag_name.outputs.tag }}.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+

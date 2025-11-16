@@ -1,0 +1,53 @@
+name: Test
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        neovim-version: [v0.9.0, v0.10.0, nightly]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Neovim ${{ matrix.neovim-version }}
+        uses: rhysd/action-setup-vim@v1
+        with:
+          neovim: true
+          version: ${{ matrix.neovim-version }}
+
+      - name: Install dependencies
+        run: |
+          mkdir -p ~/.local/share/nvim/site/pack/packer/start
+          mkdir -p ~/.local/share/nvim/site/pack/packer/opt
+
+      - name: Run basic plugin load test
+        run: |
+          nvim --headless -u NONE -i NONE \
+            -c "set runtimepath+=/home/runner/work/anki-nvim-editor/anki-nvim-editor" \
+            -c "lua require('anki-nvim-editor')" \
+            -c "quit"
+
+  type-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install luau
+        run: |
+          mkdir -p ~/.local/bin
+          curl -L https://github.com/Roblox/luau/releases/download/0.602/luau-linux.zip -o /tmp/luau.zip
+          unzip /tmp/luau.zip -d ~/.local/bin
+          chmod +x ~/.local/bin/luau
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
+        continue-on-error: true
+
+      - name: Run type check
+        run: luau analyze lua/ --flags:no-strict-binary-operations
+        continue-on-error: true
+

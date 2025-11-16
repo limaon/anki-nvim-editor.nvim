@@ -1,0 +1,38 @@
+name: Lint
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  luacheck:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install luacheck
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y luacheck
+
+      - name: Run luacheck
+        run: luacheck lua/ --globals vim
+
+  stylua:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install stylua
+        run: |
+          mkdir -p ~/.local/bin
+          curl -L https://github.com/JohnnyMorganz/StyLua/releases/download/v0.20.0/stylua-0.20.0-linux.zip -o /tmp/stylua.zip
+          unzip /tmp/stylua.zip -d ~/.local/bin
+          chmod +x ~/.local/bin/stylua
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
+
+      - name: Run stylua check
+        run: stylua --check lua/ plugin/
+
