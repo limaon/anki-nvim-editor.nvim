@@ -128,54 +128,59 @@ end
 ---@param templates table Template data { Front = "...", Back = "..." }
 ---@param css string CSS content
 function M.create_template_buffers(state, model_name, card_name, templates, css)
-  local sides = { { name = "Front", content = templates.Front, ft = "html" },
-    { name = "Back", content = templates.Back, ft = "html" },
-    { name = "Styling", content = css, ft = "css" } }
-
-  local buf_numbers = {}
-
-  for _, side_data in ipairs(sides) do
-    local buf = vim.api.nvim_create_buf(false, true)
-    local buf_name = utils.format_buffer_name(model_name, card_name, side_data.name, state.config.buffer_prefix)
-
-    -- Set buffer name
-    vim.api.nvim_buf_set_name(buf, buf_name)
-
-    -- Set filetype
-    vim.api.nvim_set_option_value("filetype", side_data.ft, { buf = buf })
-
-    -- Set content
-    local lines = vim.split(side_data.content, "\n")
-    vim.api.nvim_buf_set_lines(buf, 0, -1, false, lines)
-
-    -- Mark as not modified initially
-    vim.api.nvim_buf_set_option(buf, "modified", false)
-
-    -- Store template metadata
-    state.active_templates[buf] = {
-      model_name = model_name,
-      card_name = card_name,
-      side = side_data.name,
-      original_content = side_data.content,
-      version = 6,
+  -- Defer buffer/window operations to main loop to avoid fast event context errors
+  vim.schedule(function()
+    local sides = {
+      { name = "Front", content = templates.Front or "", ft = "html" },
+      { name = "Back", content = templates.Back or "", ft = "html" },
+      { name = "Styling", content = css or "", ft = "css" },
     }
 
-    table.insert(buf_numbers, buf)
-  end
+    local buf_numbers = {}
 
-  -- Open buffers in splits
-  if #buf_numbers > 0 then
-    vim.api.nvim_set_current_buf(buf_numbers[1])
-    vim.cmd("vsplit")
-    vim.api.nvim_set_current_buf(buf_numbers[2])
-    vim.cmd("split")
-    vim.api.nvim_set_current_buf(buf_numbers[3])
-  end
+    for _, side_data in ipairs(sides) do
+      local buf = vim.api.nvim_create_buf(false, true)
+      local buf_name = utils.format_buffer_name(model_name, card_name, side_data.name, state.config.buffer_prefix)
 
-  require("anki-nvim-editor").notify(
-    "Opened 3 buffers for editing: Front, Back, Styling",
-    "info"
-  )
+      -- Set buffer name
+      vim.api.nvim_buf_set_name(buf, buf_name)
+
+      -- Set filetype
+      vim.api.nvim_set_option_value("filetype", side_data.ft, { buf = buf })
+
+      -- Set content
+      local lines = vim.split(side_data.content, "\n")
+      vim.api.nvim_buf_set_lines(buf, 0, -1, false, lines)
+
+      -- Mark as not modified initially
+      vim.api.nvim_buf_set_option(buf, "modified", false)
+
+      -- Store template metadata
+      state.active_templates[buf] = {
+        model_name = model_name,
+        card_name = card_name,
+        side = side_data.name,
+        original_content = side_data.content,
+        version = 6,
+      }
+
+      table.insert(buf_numbers, buf)
+    end
+
+    -- Open buffers in splits
+    if #buf_numbers > 0 then
+      vim.api.nvim_set_current_buf(buf_numbers[1])
+      vim.cmd("vsplit")
+      vim.api.nvim_set_current_buf(buf_numbers[2])
+      vim.cmd("split")
+      vim.api.nvim_set_current_buf(buf_numbers[3])
+    end
+
+    require("anki-nvim-editor").notify(
+      "Opened 3 buffers for editing: Front, Back, Styling",
+      "info"
+    )
+  end)
 end
 
 return M
