@@ -58,12 +58,17 @@ local function request(state, action, params, callback)
       end
 
       -- If both result and error are nil, surface a helpful message
-      if dec_result == nil then
+      -- Some update actions return null result on success; treat as OK when no error
+      local allow_nil_result = {
+        updateModelTemplates = true,
+        updateModelStyling = true,
+      }
+      if dec_result == nil and not allow_nil_result[action] then
         callback(nil, "Empty response from Anki-Connect. Is the add-on enabled and listening on " .. (state.config.anki_connect_url or "http://127.0.0.1:8765") .. "?")
         return
       end
 
-      callback(dec_result, nil)
+      callback(dec_result or true, nil)
     end
   )
 end
