@@ -12,13 +12,16 @@ local function select_item(items, prompt, callback)
     return
   end
 
-  vim.ui.select(items, {
-    prompt = prompt,
-    format_item = function(item)
-      return item
-    end,
-  }, function(choice, index)
-    callback(choice, index)
+  -- Schedule UI to avoid fast event context issues (e.g., Telescope win_gettype)
+  vim.schedule(function()
+    vim.ui.select(items, {
+      prompt = prompt,
+      format_item = function(item)
+        return item
+      end,
+    }, function(choice, index)
+      callback(choice, index)
+    end)
   end)
 end
 
