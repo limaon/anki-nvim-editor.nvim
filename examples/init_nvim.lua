@@ -5,10 +5,10 @@
 -- vim.opt.runtimepath:prepend('/path/to/anki-nvim-editor')
 
 -- Basic setup with defaults
-require('anki-nvim-editor').setup()
+require('anki-editor').setup()
 
 -- Or with custom configuration
-require('anki-nvim-editor').setup({
+require('anki-editor').setup({
   -- URL and port where Anki-Connect is listening
   anki_connect_url = "http://127.0.0.1:8765",
 

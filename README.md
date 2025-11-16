@@ -48,10 +48,10 @@ See [PLANO.md](./PLANO.md) for the detailed roadmap and architecture notes.
 ```lua
 -- In your lazy.nvim spec:
 {
-  'limaon/anki-nvim-editor.nvim',
+  'limaon/anki-editor.nvim',
   event = 'VeryLazy',
   config = function()
-    require('anki-nvim-editor').setup({
+    require('anki-editor').setup({
       anki_connect_url = "http://127.0.0.1:8765",
     })
   end,
@@ -64,31 +64,31 @@ See [PLANO.md](./PLANO.md) for the detailed roadmap and architecture notes.
 ### vim-plug
 
 ```vim
-Plug 'limaon/anki-nvim-editor.nvim'
+Plug 'limaon/anki-editor.nvim'
 ```
 
 ```vim
 " In your init.vim or init.lua:
-lua require('anki-nvim-editor').setup()
+lua require('anki-editor').setup()
 ```
 
 ### Manual
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/limaon/anki-nvim-editor.nvim.git \
-  ~/.local/share/nvim/site/pack/manual/start/anki-nvim-editor.nvim
+git clone https://github.com/limaon/anki-editor.nvim.git \
+  ~/.local/share/nvim/site/pack/manual/start/anki-editor.nvim
 ```
 
 2. Add setup to your `init.lua`:
 ```lua
-require('anki-nvim-editor').setup()
+require('anki-editor').setup()
 ```
 
 ## Configuration
 
 ```lua
-require('anki-nvim-editor').setup({
+require('anki-editor').setup({
   -- Anki-Connect URL and port
   anki_connect_url = "http://127.0.0.1:8765",
 

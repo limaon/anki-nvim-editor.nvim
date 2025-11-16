@@ -13,7 +13,7 @@
 local Plug = vim.fn['plug#']
 
 -- Assuming you're using a plugin manager that supports Lua
-require('anki-nvim-editor').setup({
+require('anki-editor').setup({
   anki_connect_url = "http://127.0.0.1:8765",
   timeout_ms = 5000,
   auto_save = true,

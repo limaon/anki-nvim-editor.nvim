@@ -2,12 +2,12 @@
 
 return {
   {
-    'your-github-username/anki-nvim-editor',
+    'your-github-username/anki-editor.nvim',
     -- Or use local path for development:
-    -- dir = '/path/to/anki-nvim-editor',
+    -- dir = '/path/to/anki-editor.nvim',
     event = 'VeryLazy', -- Load plugin lazily
     config = function()
-      require('anki-nvim-editor').setup({
+      require('anki-editor').setup({
         anki_connect_url = "http://127.0.0.1:8765",
         timeout_ms = 5000,
       })
