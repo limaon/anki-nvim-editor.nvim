@@ -130,26 +130,48 @@ end
 function M.create_template_buffers(state, model_name, card_name, templates, css)
   -- Defer buffer/window operations to main loop to avoid fast event context errors
   vim.schedule(function()
+    -- Normalize inputs (Anki-Connect returns { css = "..." } for styling)
+    local css_str = css
+    if type(css_str) == "table" and css_str.css then
+      css_str = css_str.css
+    end
+    if css_str == nil then css_str = "" end
+
+    local front_str = templates and templates.Front or ""
+    local back_str = templates and templates.Back or ""
+    if type(front_str) ~= "string" then front_str = tostring(front_str or "") end
+    if type(back_str) ~= "string" then back_str = tostring(back_str or "") end
+    if type(css_str) ~= "string" then css_str = tostring(css_str or "") end
+
     local sides = {
-      { name = "Front", content = templates.Front or "", ft = "html" },
-      { name = "Back", content = templates.Back or "", ft = "html" },
-      { name = "Styling", content = css or "", ft = "css" },
+      { name = "Front", content = front_str, ft = "html" },
+      { name = "Back", content = back_str, ft = "html" },
+      { name = "Styling", content = css_str, ft = "css" },
     }
 
     local buf_numbers = {}
 
     for _, side_data in ipairs(sides) do
-      local buf = vim.api.nvim_create_buf(false, true)
       local buf_name = utils.format_buffer_name(model_name, card_name, side_data.name, state.config.buffer_prefix)
-
-      -- Set buffer name
-      vim.api.nvim_buf_set_name(buf, buf_name)
+      local existing = vim.fn.bufnr(buf_name)
+      local buf
+      if existing ~= -1 then
+        buf = existing
+      else
+        buf = vim.api.nvim_create_buf(false, true)
+        -- Set buffer name (only for new buffers)
+        vim.api.nvim_buf_set_name(buf, buf_name)
+      end
 
       -- Set filetype
       vim.api.nvim_set_option_value("filetype", side_data.ft, { buf = buf })
 
       -- Set content
-      local lines = vim.split(side_data.content, "\n")
+      local content = side_data.content or ""
+      if type(content) ~= "string" then
+        content = tostring(content)
+      end
+      local lines = vim.split(content, "\n", { plain = true })
       vim.api.nvim_buf_set_lines(buf, 0, -1, false, lines)
 
       -- Mark as not modified initially
