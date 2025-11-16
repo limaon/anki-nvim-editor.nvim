@@ -8,10 +8,11 @@ local M = {}
 ---@param params table|nil Request parameters
 ---@param callback function Callback function(result, error)
 local function request(state, action, params, callback)
+  -- Ensure params is an object for Anki-Connect schema; use vim.empty_dict() when no params.
   local payload = {
     action = action,
     version = 6,
-    params = params or {},
+    params = (params == nil or (type(params) == "table" and next(params) == nil)) and vim.empty_dict() or params,
   }
 
   if state.config.api_key then
