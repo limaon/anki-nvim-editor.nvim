@@ -1,4 +1,4 @@
--- Utility functions for anki-nvim-editor
+-- Utility functions for anki-editor
 
 local M = {}
 
@@ -107,4 +107,5 @@ function M.format_buffer_name(model_name, card_name, side, prefix)
 end
 
 return M
+
 
