@@ -13,9 +13,9 @@ return {
       })
     end,
     keys = {
-      { '<leader>ae', ':AnkiEdit<CR>', desc = 'Edit Anki template' },
-      { '<leader>al', ':AnkiList<CR>', desc = 'List Anki models' },
-      { '<leader>ap', ':AnkiPing<CR>', desc = 'Ping Anki-Connect' },
+      { '<leader>ne', ':AnkiEdit<CR>', desc = 'Edit Anki template' },
+      { '<leader>nl', ':AnkiList<CR>', desc = 'List Anki models' },
+      { '<leader>np', ':AnkiPing<CR>', desc = 'Ping Anki-Connect' },
     },
   },
 }

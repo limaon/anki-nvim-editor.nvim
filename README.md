@@ -56,7 +56,7 @@ See [PLANO.md](./PLANO.md) for the detailed roadmap and architecture notes.
     })
   end,
   keys = {
-    { '<leader>ae', ':AnkiEdit<CR>', desc = 'Edit Anki template' },
+    { '<leader>ne', ':AnkiEdit<CR>', desc = 'Edit Anki template' },
   },
 }
 ```
@@ -142,9 +142,9 @@ See `examples/` for additional configurations (lazy.nvim, vim-plug).
 ```lua
 -- In your init.lua
 local opts = { noremap = true, silent = true }
-vim.keymap.set('n', '<leader>ae', ':AnkiEdit<CR>', opts)
-vim.keymap.set('n', '<leader>al', ':AnkiList<CR>', opts)
-vim.keymap.set('n', '<leader>ap', ':AnkiPing<CR>', opts)
+vim.keymap.set('n', '<leader>ne', ':AnkiEdit<CR>', opts)
+vim.keymap.set('n', '<leader>nl', ':AnkiList<CR>', opts)
+vim.keymap.set('n', '<leader>np', ':AnkiPing<CR>', opts)
 ```
 
 ## Troubleshooting

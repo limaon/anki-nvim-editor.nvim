@@ -19,3 +19,9 @@ require('anki-nvim-editor').setup({
   auto_save = true,
 })
 
+-- Suggested keymaps (non-conflicting with avante.nvim)
+local opts = { noremap = true, silent = true }
+vim.keymap.set('n', '<leader>ne', ':AnkiEdit<CR>', opts)
+vim.keymap.set('n', '<leader>nl', ':AnkiList<CR>', opts)
+vim.keymap.set('n', '<leader>np', ':AnkiPing<CR>', opts)
+

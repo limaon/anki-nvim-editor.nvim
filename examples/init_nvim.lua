@@ -42,7 +42,7 @@ require('anki-nvim-editor').setup({
 
 -- Example key mappings (optional)
 local opts = { noremap = true, silent = true }
-vim.keymap.set('n', '<leader>ae', ':AnkiEdit<CR>', opts)
-vim.keymap.set('n', '<leader>al', ':AnkiList<CR>', opts)
-vim.keymap.set('n', '<leader>ap', ':AnkiPing<CR>', opts)
+vim.keymap.set('n', '<leader>ne', ':AnkiEdit<CR>', opts)
+vim.keymap.set('n', '<leader>nl', ':AnkiList<CR>', opts)
+vim.keymap.set('n', '<leader>np', ':AnkiPing<CR>', opts)
 
