@@ -131,13 +131,14 @@ function M.validate_template(content, side)
   return true, nil
 end
 
----Create buffers for editing templates
+---Create buffers for editing templates.
 ---@param state table Plugin state
 ---@param model_name string Model name
 ---@param card_name string Card name
 ---@param templates table Template data { Front = "...", Back = "..." }
 ---@param css string CSS content
-function M.create_template_buffers(state, model_name, card_name, templates, css)
+---@param focus_side string|nil Which side to focus ("Front"|"Back"|"Styling"), others stay hidden
+function M.create_template_buffers(state, model_name, card_name, templates, css, focus_side)
   -- Defer buffer/window operations to main loop to avoid fast event context errors
   vim.schedule(function()
     -- Normalize inputs (Anki-Connect returns { css = "..." } for styling)
@@ -160,6 +161,7 @@ function M.create_template_buffers(state, model_name, card_name, templates, css)
     }
 
     local buf_numbers = {}
+    local buf_by_side = {}
 
     for _, side_data in ipairs(sides) do
       local buf_name = utils.format_buffer_name(model_name, card_name, side_data.name, state.config.buffer_prefix)
@@ -203,19 +205,17 @@ function M.create_template_buffers(state, model_name, card_name, templates, css)
       }
 
       table.insert(buf_numbers, buf)
+      buf_by_side[side_data.name] = buf
     end
 
-    -- Open buffers in splits
-    if #buf_numbers > 0 then
-      vim.api.nvim_set_current_buf(buf_numbers[1])
-      vim.cmd("vsplit")
-      vim.api.nvim_set_current_buf(buf_numbers[2])
-      vim.cmd("split")
-      vim.api.nvim_set_current_buf(buf_numbers[3])
+    -- Focus only the requested side, keep others hidden (loaded buffers)
+    local target = buf_by_side[focus_side] or buf_numbers[1]
+    if target then
+      vim.api.nvim_set_current_buf(target)
     end
 
     require("anki-editor").notify(
-      "Opened 3 buffers for editing: Front, Back, Styling",
+      string.format("Opened buffers for %s / %s, focused: %s", model_name, card_name, focus_side or "Front"),
       "info"
     )
   end)

@@ -50,8 +50,8 @@ function M.edit_template(state)
             return
           end
 
-          -- Create buffers for all three sides
-          buffers.create_template_buffers(state, model, card, templates[card], css)
+          -- Create buffers for all three sides but focus only the selected side
+          buffers.create_template_buffers(state, model, card, templates[card], css, side)
         end)
       end)
     end)

@@ -123,12 +123,14 @@ map('n', '<leader>np', ':AnkiPing<CR>', opts)
 1. `:AnkiEdit`
 2. Choose a note type (model), then a card (e.g. “Card 1”), then a side
    (Front / Back / Styling).
-3. Three buffers open:
+3. The selected side opens in the current window. The other two sides are
+   created as background buffers (no split). You can switch later with
+   |:bnext|, |:bprev| or `:buffer {bufname}`:
      • `[Anki] <Model> - <Card> - Front`
      • `[Anki] <Model> - <Card> - Back`
      • `[Anki] <Model> - <Card> - Styling`
-4. Edit and `:write` in any of them to push to Anki via Anki‑Connect.
-5. If you use “Anki Preview Reloader” add‑on, Anki’s preview reloads live.
+4. Edit the focused buffer and `:write` to push changes via Anki‑Connect.
+5. If you use “Anki Preview Reloader”, Anki’s preview reloads automatically.
 
 Notes:
   • Our write handler only triggers for buffers whose name begins with the

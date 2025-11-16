@@ -128,7 +128,8 @@ See `examples/` for additional configurations (lazy.nvim, vim-plug).
 2. Select the note type (model)
 3. Select the card (e.g., "Card 1")
 4. Select the side (Front, Back, or Styling)
-5. Edit the opened buffer
+5. The selected side opens in the current window (other sides are created in the background).
+   Use `:bnext`, `:bprev` or `:buffer [name]` to switch to Back/Styling buffers.
 6. Save with `:w` to sync with Anki
 
 ### Example Keybindings
