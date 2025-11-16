@@ -46,12 +46,24 @@ local function request(state, action, params, callback)
         return
       end
 
-      if decoded.error then
-        callback(nil, tostring(decoded.error))
+      -- Normalize vim.NIL to Lua nil
+      local dec_error = decoded and decoded.error
+      local dec_result = decoded and decoded.result
+      if dec_error == vim.NIL then dec_error = nil end
+      if dec_result == vim.NIL then dec_result = nil end
+
+      if dec_error ~= nil then
+        callback(nil, tostring(dec_error))
         return
       end
 
-      callback(decoded.result, nil)
+      -- If both result and error are nil, surface a helpful message
+      if dec_result == nil then
+        callback(nil, "Empty response from Anki-Connect. Is the add-on enabled and listening on " .. (state.config.anki_connect_url or "http://127.0.0.1:8765") .. "?")
+        return
+      end
+
+      callback(dec_result, nil)
     end
   )
 end
