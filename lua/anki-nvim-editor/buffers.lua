@@ -9,13 +9,16 @@ local anki_connect = require("anki-nvim-editor.anki_connect")
 function M.setup_autocmds(state)
   local group = vim.api.nvim_create_augroup("AnkiEditorGroup", { clear = true })
 
-  vim.api.nvim_create_autocmd("BufWritePost", {
+  -- Intercept writes for Anki buffers so we don't try to write files to disk
+  vim.api.nvim_create_autocmd("BufWriteCmd", {
     group = group,
     pattern = "*",
     callback = function(args)
       local bufnr = args.buf
       if state.active_templates[bufnr] then
         M.handle_buffer_save(state, bufnr)
+        -- Mark as saved and stop the default write
+        vim.api.nvim_buf_set_option(bufnr, "modified", false)
       end
     end,
   })
@@ -158,10 +161,16 @@ function M.create_template_buffers(state, model_name, card_name, templates, css)
       if existing ~= -1 then
         buf = existing
       else
-        buf = vim.api.nvim_create_buf(false, true)
+        -- Create a normal, listed buffer (not scratch)
+        buf = vim.api.nvim_create_buf(true, false)
         -- Set buffer name (only for new buffers)
         vim.api.nvim_buf_set_name(buf, buf_name)
       end
+
+      -- Ensure buffer behaves like a virtual editable document (not written to disk)
+      vim.api.nvim_set_option_value("buftype", "acwrite", { buf = buf })
+      vim.api.nvim_set_option_value("buflisted", true, { buf = buf })
+      vim.api.nvim_set_option_value("swapfile", false, { buf = buf })
 
       -- Set filetype
       vim.api.nvim_set_option_value("filetype", side_data.ft, { buf = buf })
